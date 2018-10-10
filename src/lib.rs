@@ -83,11 +83,11 @@ use std::io::{Error, Read, Write};
 /// Trait used to express encoding relationships.
 pub trait Encoder<T, E=Error> {
     /// Encodes to the writer with the given parameters.
-    fn encode<W: Write>(&self, writer: &mut W, params: T) -> Result<(), Error>;
+    fn encode<W: Write>(&self, writer: &mut W, params: T) -> Result<(), E>;
 }
 
 /// Trait used to express decoding relationships.
 pub trait Decoder<T, E=Error>: Sized {
     /// Decodes from the reader with the given parameters.
-    fn decode<R: Read>(reader: &mut R, params: T) -> Result<Self, Error>;
+    fn decode<R: Read>(reader: &mut R, params: T) -> Result<Self, E>;
 }
