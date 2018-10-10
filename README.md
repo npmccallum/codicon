@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/npmccallum/codicon.svg?branch=master)](https://travis-ci.org/npmccallum/codicon)
+[![Build Status](https://travis-ci.org/psilocybin/codicon.svg?branch=master)](https://travis-ci.org/psilocybin/codicon)
 ![Rust Version 1.28+](https://img.shields.io/badge/rustc-v1.28%2B-blue.svg)
 [![Crate](https://img.shields.io/crates/v/codicon.svg)](https://crates.io/crates/codicon)
 [![Docs](https://docs.rs/codicon/badge.svg)](https://docs.rs/codicon)
