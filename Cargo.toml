@@ -1,0 +1,10 @@
+[package]
+name = "codicon"
+version = "0.1.0"
+authors = ["Nathaniel McCallum <npmccallum@redhat.com>"]
+keywords = ["coded", "encoding", "decoding", "encoder", "decoder"]
+repository = "https://github.com/npmccallum/codicon"
+description = "Traits for encoding and decoding"
+documentation = "https://docs.rs/codicon"
+license = "Apache-2.0"
+readme = "README.md"
