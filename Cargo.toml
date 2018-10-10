@@ -1,6 +1,6 @@
 [package]
 name = "codicon"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Nathaniel McCallum <npmccallum@redhat.com>"]
 keywords = ["coded", "encoding", "decoding", "encoder", "decoder"]
 repository = "https://github.com/psilocybin/codicon"
