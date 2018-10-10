@@ -12,14 +12,9 @@ may be used for that encoding or decoding. This tiny crate solves this problem.
 
 # Install
 
-You can run this command:
+Run this command:
 
     $ cargo add codicon
-
-Or you can add this to `Cargo.toml`:
-
-    [dependencies]
-    codicon = "0.1.0"
 
 # Examples
 
