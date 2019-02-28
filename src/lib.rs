@@ -80,10 +80,16 @@
 //! assert_eq!(u8::decode(&mut buf.as_ref(), Foo).unwrap(), 7u8);
 //! ```
 
+#![cfg_attr(has_associated_type_defaults, feature(associated_type_defaults))]
+
 use std::io::{Read, Write};
 
 /// Trait used to express encoding relationships.
 pub trait Encoder<T> {
+    #[cfg(has_associated_type_defaults)]
+    type Error = std::io::Error;
+
+    #[cfg(not(has_associated_type_defaults))]
     type Error;
 
     /// Encodes to the writer with the given parameters.
@@ -92,6 +98,10 @@ pub trait Encoder<T> {
 
 /// Trait used to express decoding relationships.
 pub trait Decoder<T>: Sized {
+    #[cfg(has_associated_type_defaults)]
+    type Error = std::io::Error;
+
+    #[cfg(not(has_associated_type_defaults))]
     type Error;
 
     /// Decodes from the reader with the given parameters.
