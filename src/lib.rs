@@ -41,6 +41,7 @@
 //! struct Foo;
 //!
 //! impl Encoder<Foo> for u8 {
+//!     type Error = std::io::Error;
 //!     fn encode<W: Write>(&self, writer: &mut W, params: Foo) -> Result<()> {
 //!         writer.write_all(slice::from_ref(self))?;
 //!         Ok(())
@@ -67,6 +68,7 @@
 //! struct Foo;
 //!
 //! impl Decoder<Foo> for u8 {
+//!     type Error = std::io::Error;
 //!     fn decode<R: Read>(reader: &mut R, params: Foo) -> Result<Self> {
 //!         let mut byte = 0u8;
 //!         reader.read_exact(slice::from_mut(&mut byte))?;
@@ -78,16 +80,20 @@
 //! assert_eq!(u8::decode(&mut buf.as_ref(), Foo).unwrap(), 7u8);
 //! ```
 
-use std::io::{Error, Read, Write};
+use std::io::{Read, Write};
 
 /// Trait used to express encoding relationships.
-pub trait Encoder<T, E=Error> {
+pub trait Encoder<T> {
+    type Error;
+
     /// Encodes to the writer with the given parameters.
-    fn encode<W: Write>(&self, writer: &mut W, params: T) -> Result<(), E>;
+    fn encode<W: Write>(&self, writer: &mut W, params: T) -> Result<(), Self::Error>;
 }
 
 /// Trait used to express decoding relationships.
-pub trait Decoder<T, E=Error>: Sized {
+pub trait Decoder<T>: Sized {
+    type Error;
+
     /// Decodes from the reader with the given parameters.
-    fn decode<R: Read>(reader: &mut R, params: T) -> Result<Self, E>;
+    fn decode<R: Read>(reader: &mut R, params: T) -> Result<Self, Self::Error>;
 }
