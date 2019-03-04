@@ -85,7 +85,7 @@
 use std::io::{Read, Write};
 
 /// Trait used to express encoding relationships.
-pub trait Encoder<T> {
+pub trait Encoder<T=()> {
     #[cfg(has_associated_type_defaults)]
     type Error = std::io::Error;
 
@@ -97,7 +97,7 @@ pub trait Encoder<T> {
 }
 
 /// Trait used to express decoding relationships.
-pub trait Decoder<T>: Sized {
+pub trait Decoder<T=()>: Sized {
     #[cfg(has_associated_type_defaults)]
     type Error = std::io::Error;
 
