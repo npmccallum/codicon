@@ -1,38 +1,36 @@
-[![Build Status](https://travis-ci.org/psilocybin/codicon.svg?branch=master)](https://travis-ci.org/psilocybin/codicon)
-![Rust Version 1.28+](https://img.shields.io/badge/rustc-v1.28%2B-blue.svg)
-[![Crate](https://img.shields.io/crates/v/codicon.svg)](https://crates.io/crates/codicon)
-[![Docs](https://docs.rs/codicon/badge.svg)](https://docs.rs/codicon)
+[![Workflow Status](https://github.com/enarx/codicon/workflows/test/badge.svg)](https://github.com/enarx/codicon/actions?query=workflow%3A%22test%22)
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/enarx/codicon.svg)](https://isitmaintained.com/project/enarx/codicon "Average time to resolve an issue")
+[![Percentage of issues still open](https://isitmaintained.com/badge/open/enarx/codicon.svg)](https://isitmaintained.com/project/enarx/codicon "Percentage of issues still open")
+![Maintenance](https://img.shields.io/badge/maintenance-activly--developed-brightgreen.svg)
 
-Codicon is a crate containing two simple traits (`Encoder` and `Decoder`) that
-express relationships between a native Rust type and its possible encodings.
+# codicon
 
-We often need to express that a type can be encoded or decoded. We also need a
-way to express the type of the encoding or decoding as well as parameters that
-may be used for that encoding or decoding. This tiny crate solves this problem.
+Traits for encoding and decoding.
 
-# Install
+This crate provides generic traits for encoding and decoding to a
+`std::io::Read` or `std::io::Write` type, respectively.
 
-Run this command:
+We often need to express that a type can be encoded or decoded. We
+also need a way to express the type of the encoding or decoding as
+well as parameters that may be used for that encoding or decoding.
+This tiny crate solves this problem.
 
-    $ cargo add codicon
-
-# Examples
+## Examples
 
 Let's say we want `u8` to be able to be encoded in a (made up) format `Foo`
 which simply writes the byte without modification. We can express this
 encoding as follows:
 
 ```rust
-use std::io::{Result, Write};
-use std::slice;
-
-use codicon::Encoder;
+use codicon::*;
 
 struct Foo;
 
 impl Encoder<Foo> for u8 {
-    fn encode<W: Write>(&self, writer: &mut W, params: Foo) -> Result<()> {
-        writer.write_all(slice::from_ref(self))?;
+    type Error = std::io::Error;
+
+    fn encode(&self, mut writer: impl Write, params: Foo) -> std::io::Result<()> {
+        writer.write_all(std::slice::from_ref(self))?;
         Ok(())
     }
 }
@@ -49,17 +47,16 @@ a type with parameters.
 Decoding works the same as encoding:
 
 ```rust
-use std::io::{Result, Read};
-use std::slice;
-
-use codicon::Decoder;
+use codicon::*;
 
 struct Foo;
 
 impl Decoder<Foo> for u8 {
-    fn decode<R: Read>(reader: &mut R, params: Foo) -> Result<Self> {
+    type Error = std::io::Error;
+
+    fn decode(mut reader: impl Read, params: Foo) -> std::io::Result<Self> {
         let mut byte = 0u8;
-        reader.read_exact(slice::from_mut(&mut byte))?;
+        reader.read_exact(std::slice::from_mut(&mut byte))?;
         Ok(byte)
     }
 }
@@ -67,3 +64,5 @@ impl Decoder<Foo> for u8 {
 let buf = [7u8; 1];
 assert_eq!(u8::decode(&mut buf.as_ref(), Foo).unwrap(), 7u8);
 ```
+
+License: Apache-2.0
