@@ -8,3 +8,12 @@ description = "Traits for encoding and decoding"
 documentation = "https://docs.rs/codicon"
 license = "Apache-2.0"
 readme = "README.md"
+edition = "2018"
+
+[badges]
+# See https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section
+github = { repository = "enarx/codicon", workflow = "test" }
+#github = { repository = "enarx/codicon", workflow = "lint" }
+maintenance = { status = "actively-developed" }
+is-it-maintained-issue-resolution = { repository = "enarx/codicon" }
+is-it-maintained-open-issues = { repository = "enarx/codicon" }
