@@ -33,17 +33,15 @@
 //! encoding as follows:
 //!
 //! ```rust
-//! use std::io::{Result, Write};
-//! use std::slice;
-//!
-//! use codicon::Encoder;
+//! use codicon::*;
 //!
 //! struct Foo;
 //!
 //! impl Encoder<Foo> for u8 {
 //!     type Error = std::io::Error;
-//!     fn encode(&self, writer: &mut impl Write, params: Foo) -> Result<()> {
-//!         writer.write_all(slice::from_ref(self))?;
+//!
+//!     fn encode(&self, mut writer: impl Write, params: Foo) -> std::io::Result<()> {
+//!         writer.write_all(std::slice::from_ref(self))?;
 //!         Ok(())
 //!     }
 //! }
@@ -60,18 +58,16 @@
 //! Decoding works the same as encoding:
 //!
 //! ```rust
-//! use std::io::{Result, Read};
-//! use std::slice;
-//!
-//! use codicon::Decoder;
+//! use codicon::*;
 //!
 //! struct Foo;
 //!
 //! impl Decoder<Foo> for u8 {
 //!     type Error = std::io::Error;
-//!     fn decode(reader: &mut impl Read, params: Foo) -> Result<Self> {
+//!
+//!     fn decode(mut reader: impl Read, params: Foo) -> std::io::Result<Self> {
 //!         let mut byte = 0u8;
-//!         reader.read_exact(slice::from_mut(&mut byte))?;
+//!         reader.read_exact(std::slice::from_mut(&mut byte))?;
 //!         Ok(byte)
 //!     }
 //! }
@@ -80,30 +76,20 @@
 //! assert_eq!(u8::decode(&mut buf.as_ref(), Foo).unwrap(), 7u8);
 //! ```
 
-#![cfg_attr(has_associated_type_defaults, feature(associated_type_defaults))]
-
-use std::io::{Read, Write};
+pub use std::io::{Read, Write};
 
 /// Trait used to express encoding relationships.
-pub trait Encoder<T=()> {
-    #[cfg(has_associated_type_defaults)]
-    type Error = std::io::Error;
-
-    #[cfg(not(has_associated_type_defaults))]
+pub trait Encoder<T> {
     type Error;
 
     /// Encodes to the writer with the given parameters.
-    fn encode(&self, writer: &mut impl Write, params: T) -> Result<(), Self::Error>;
+    fn encode(&self, writer: impl Write, params: T) -> Result<(), Self::Error>;
 }
 
 /// Trait used to express decoding relationships.
-pub trait Decoder<T=()>: Sized {
-    #[cfg(has_associated_type_defaults)]
-    type Error = std::io::Error;
-
-    #[cfg(not(has_associated_type_defaults))]
+pub trait Decoder<T>: Sized {
     type Error;
 
     /// Decodes from the reader with the given parameters.
-    fn decode(reader: &mut impl Read, params: T) -> Result<Self, Self::Error>;
+    fn decode(reader: impl Read, params: T) -> Result<Self, Self::Error>;
 }
